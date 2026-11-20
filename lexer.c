@@ -46,9 +46,6 @@ static int regex_create(regex_t *restrict regex, const char *restrict pattern) {
 
 #define TOKEN_TYPE_COUNT 2
 
-#define TKN_WORD 0
-#define TKN_EOF 1
-
 static regex_t tokens[TOKEN_TYPE_COUNT];
 
 int init_lexer() {
@@ -61,7 +58,7 @@ int init_lexer() {
     || regex_create(&tokens[TKN_EOF], "^$");
 }
 
-int lex_file(const char *filepath) {
+int lex_file(const char *filepath, Token **tokens_out) {
 
     FILE *file = fopen(filepath, "r");
 

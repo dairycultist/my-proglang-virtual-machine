@@ -12,7 +12,9 @@ int main(int argc, char **argv) {
     if (init_lexer())
         return 1;
     
-    if (lex_file(argv[1]))
+    Token *tokens;
+
+    if (lex_file(argv[1], &tokens))
         return 1;
 
     return 0;

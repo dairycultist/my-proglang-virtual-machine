@@ -3,16 +3,32 @@
 
 typedef int token_t;
 
-typedef struct EmptyToken {
+#define TKN_WORD 0
+#define TKN_EOF 1
 
-    token_t type; // a unique int saying this is a MyElementType token object so we know what type to cast a (token *) pointing to a token object to
-    token_t *next; // a pointer to the start of the next token object (whose first property is always its type)
+typedef struct {
+    token_t type;
+} EmptyToken;
 
-    // whatever data the token stores, if any, goes here
+typedef struct {
+    token_t type;
+    token_t *next;
+    char *value; // for string literals, keywords, and function/variable names
+} StringToken;
 
-};
+typedef struct {
+    token_t type;
+    token_t *next;
+    int value;
+} IntToken;
+
+typedef union {
+    EmptyToken empty_token;
+    StringToken string_token;
+    IntToken int_token;
+} Token;
 
 int init_lexer();
-int lex_file(const char *filepath);
+int lex_file(const char *filepath, Token **tokens_out);
 
 #endif
