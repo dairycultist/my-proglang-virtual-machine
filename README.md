@@ -10,9 +10,10 @@ the programming language specs
 - minimal boilerplate for making desktop apps
 
 the virtual machine has built-in libraries like
-- GL (implements sdl2+glew+opengl abstractly for you)
-  - reveals helpers for drawing sprites/text of different rotations, scales, and tints
-  - reveals helpers for loading objs, creating meshes manually, drawing those, also loading custom shaders
+- `GL` (implements sdl2+glew+opengl abstractly for you)
+  - exposes helpers for drawing sprites/text of different rotations, scales, and tints
+  - exposes helpers for loading objs, creating meshes manually, drawing those, also loading custom shaders
+- `Math` (your bog-standard math library, stuff like trig)
 
 since it's a virtual machine with namespaces for libraries there's no explicit importing of libraries, you just have all of them available to you immediately. the syntax is
 
