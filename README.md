@@ -1,13 +1,12 @@
 # my-proglang-virtual-machine
 
-virtual machine in C that runs a custom programming language, just so I can have a programming language easier than C that can create a window
+Virtual machine written in C that runs a custom programming language, oriented towards minimal boilerplate for making desktop apps (because C is the only programming language I know how to make a window in and I am not doing that for every project).
 
 the programming language specs
 - interpreted (not with bytecode)
 - strong typing
 - function overloading is a thing
 - functional; functions have no hidden side effects (i.e. 'imperative' functions mutate the state through their output parameters)
-- minimal boilerplate for making desktop apps
 
 the virtual machine has built-in libraries like
 - `GL` (implements sdl2+glew+opengl abstractly for you)
@@ -32,19 +31,4 @@ fn foo(mut int x, int y) {
 mut int my_var = 10;
 foo(mut my_var);
 print(my_var); // "20"
-```
-
----
-
-For lexing (and also parsing but that's later) we're gonna use a linked list. Each element takes the form:
-
-```
-typedef struct MyElementType {
-
-  token_t type; // an unique int saying this is a MyElementType token object
-  token_t *next; // a pointer to the start of the next token object (whose first property is always its type)
-
-  // whatever data the token stores, if any, goes here
-
-};
 ```
