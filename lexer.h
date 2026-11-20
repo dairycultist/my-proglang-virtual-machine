@@ -13,6 +13,6 @@ typedef struct EmptyToken {
 };
 
 int init_lexer();
-int lex(const char *filepath);
+int lex_file(const char *filepath);
 
 #endif

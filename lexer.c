@@ -50,16 +50,21 @@ static int regex_create(regex_t *restrict regex, const char *restrict pattern) {
     }
 }
 
-static regex_t test;
+#define TOKEN_TYPE_COUNT 2
+
+static regex_t tokens[TOKEN_TYPE_COUNT];
 
 int init_lexer() {
 
     // create all our regexes
+    // - they all start with ^ because duh
+    // - they all end with \s* to consume whitespace/newlines
     return
-       regex_create(&test, "^#[a-z]*");
+       regex_create(&tokens[0], "^[a-zA-Z_]+\\s*") // basic "word" token
+    || regex_create(&tokens[1], "^$"); // this is the EOF token
 }
 
-int lex(const char *filepath) {
+int lex_file(const char *filepath) {
 
     FILE *file = fopen(filepath, "r");
 
@@ -74,19 +79,49 @@ int lex(const char *filepath) {
 
     int buffer_offset = 0;
 
-    int match_length = regex_peek(&test, buffer, &buffer_offset, file);
+    // lex until we reach a segment that doesn't match any token, or EOF
+    while (1) {
 
-    if (match_length != -1) {
+        int matched = 0;
+        int match_length;
 
-        printf("Pattern found. Here is the match:\n");
-        printf("%.*s\n", match_length, buffer + buffer_offset);
+        // try buffer against every token type
+        for (int i = 0; i < TOKEN_TYPE_COUNT; i++) {
 
-    } else {
+            match_length = regex_peek(&tokens[i], buffer, &buffer_offset, file);
 
-        printf("Pattern not found.\n");
+            // matched
+            if (match_length != -1) {
+
+                printf("<%d>: %.*s\n", i, match_length, buffer + buffer_offset);
+                
+                // if this is EOF let's communicate that (we're assuming EOF is
+                // just at the end for now, we'll specify it in an object later)
+                matched = i == TOKEN_TYPE_COUNT - 1 ? -1 : 1;
+
+                break;
+            }
+        }
+
+        if (matched) {
+
+            // reached EOF
+            if (matched == -1)
+                return 0;
+
+            // otherwise, move to the next portion of buffer
+            buffer_offset += match_length;
+
+        } else {
+
+            printf("No token matches buffer:\n\n----------\n\n%s\n\n----------\n", buffer + buffer_offset);
+            return 1;
+        }
     }
 
     printf("\n");
 
     fclose(file);
+
+    return 0;
 }

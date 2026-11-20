@@ -12,7 +12,7 @@ int main(int argc, char **argv) {
     if (init_lexer())
         return 1;
     
-    if (lex(argv[1]))
+    if (lex_file(argv[1]))
         return 1;
 
     return 0;
