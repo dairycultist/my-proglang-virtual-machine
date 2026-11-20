@@ -12,4 +12,6 @@ typedef struct EmptyToken {
 
 };
 
+int lex(const char *filepath);
+
 #endif
