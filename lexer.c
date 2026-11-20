@@ -8,11 +8,7 @@ static int regex_peek(const regex_t *regex, char buffer[512], int buffer_offset)
 
     int value = regexec(regex, buffer + buffer_offset, 0, NULL, 0);
 
-    if (value == REG_NOMATCH) {
-        printf("Pattern not found.\n");
-    } else {
-        printf("Pattern found.\n");
-    }
+    return value != REG_NOMATCH;
 }
 
 // returns the length of the segment that matches the regex; if buffer_offset + match length > 256,
@@ -21,6 +17,23 @@ static int regex_peek(const regex_t *regex, char buffer[512], int buffer_offset)
 // also ensures the final character in buffer is \0
 static int regex_consume(const regex_t *regex, char buffer[512], int *buffer_offset, FILE *file) {
 
+}
+
+static int regex_create(regex_t *restrict regex, const char *restrict pattern) {
+
+    if (regcomp(regex, pattern, REG_EXTENDED)) {
+        printf("Failed to compile regex\n");
+        return 1;
+    }
+}
+
+static regex_t test;
+
+int init_lexer() {
+
+    // create all our regexes
+    return
+       regex_create(&test, "^#");
 }
 
 int lex(const char *filepath) {
@@ -33,16 +46,15 @@ int lex(const char *filepath) {
     }
 
     char buffer[512] = {0};
-    regex_t regex;
-
-    if (regcomp(&regex, "^#", REG_EXTENDED)) {
-        printf("Failed to compile regex\n");
-        return 1;
-    }
 
     while (fgets(buffer, sizeof(buffer), file)) {
         printf("%s\n", buffer);
-        regex_peek(&regex, buffer, 0);
+        
+        if (regex_peek(&test, buffer, 0)) {
+            printf("Pattern found.\n");
+        } else {
+            printf("Pattern not found.\n");
+        }
     }
 
     printf("\n");

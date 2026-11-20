@@ -8,10 +8,12 @@ int main(int argc, char **argv) {
         printf("Usage: %s <filename>\n", argv[0]);
         return 1;
     }
-    
-    if (lex(argv[1])) {
+
+    if (init_lexer())
         return 1;
-    }
+    
+    if (lex(argv[1]))
+        return 1;
 
     return 0;
 }
