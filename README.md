@@ -6,7 +6,7 @@ the programming language specs
 - interpreted (not with bytecode)
 - strong typing
 - function overloading is a thing
-- functional; functions have no hidden side effects (i.e. 'imperative' functions take in a state object labeled mutable)
+- functional; functions have no hidden side effects (i.e. 'imperative' functions mutate the state through their output parameters)
 - minimal boilerplate for making desktop apps
 
 the virtual machine has built-in libraries like
