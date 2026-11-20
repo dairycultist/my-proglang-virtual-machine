@@ -11,24 +11,18 @@
 // relative to the data; you must increment it by the consumed segment's length yourself
 static int regex_peek(const regex_t *regex, char buffer[LEX_BUFFER_SIZE], int *buffer_offset, FILE *file) {
 
-    // check if buffer_offset is beyond the halfway point, which means that we're running out of space!
+    // check if we're running out of space in the buffer
     if (*buffer_offset > LEX_BUFFER_SIZE / 2) {
 
-        // this isn't AI I swear I just had trouble visualizing the process I'm implementing so there's a lot of comments
+        int remaining_data_len = LEX_BUFFER_SIZE - *buffer_offset - 1;
 
-        // move data beyond buffer_offset to the beginning of the buffer
-        memcpy(buffer, buffer + *buffer_offset, LEX_BUFFER_SIZE - *buffer_offset - 1);
-        
-        // set buffer_offset to the point right after that data
-        *buffer_offset = LEX_BUFFER_SIZE - *buffer_offset - 1;
+        // move remaining data to the beginning of the buffer
+        memcpy(buffer, buffer + *buffer_offset, remaining_data_len);
 
-        // zero out everything after that point to ensure the character following valid buffer data stays \0
-        memset(buffer + *buffer_offset, 0, LEX_BUFFER_SIZE - *buffer_offset);
+        // read from the file to fill the new buffer space (ensure null-termination)
+        memset(buffer + remaining_data_len, 0, *buffer_offset + 1);
+        fread(buffer + remaining_data_len, sizeof(char), *buffer_offset, file);
 
-        // read from the file to fill the remaining buffer space
-        fread(buffer + *buffer_offset, sizeof(char), LEX_BUFFER_SIZE - *buffer_offset - 1, file);
-
-        // set buffer_offset to 0 to reflect the new position of the data
         *buffer_offset = 0;
     }
 
@@ -97,6 +91,7 @@ int lex_file(const char *filepath) {
                 continue;
 
             // matched
+            // TODO add token object to list instead of just printing the token string
             printf("<%d>: %.*s\n", i, match_length, buffer + buffer_offset);
             state = i == TKN_EOF ? 2 : 1;
             break;
