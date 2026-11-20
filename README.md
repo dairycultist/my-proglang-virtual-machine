@@ -33,3 +33,18 @@ mut int my_var = 10;
 foo(mut my_var);
 print(my_var); // "20"
 ```
+
+---
+
+For lexing (and also parsing but that's later) we're gonna use a linked list. Each element takes the form:
+
+```
+typedef struct MyElementType {
+
+  token_t type; // an unique int saying this is a MyElementType token object
+  token_t *next; // a pointer to the start of the next token object (whose first property is always its type)
+
+  // whatever data the token stores, if any, goes here
+
+};
+```
