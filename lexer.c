@@ -6,18 +6,10 @@
 
 #define LEX_BUFFER_SIZE 512
 
-// returns true if the buffer matches the regex, false otherwise
-static int regex_peek(const regex_t *regex, char buffer[512], int buffer_offset) {
-
-    int value = regexec(regex, buffer + buffer_offset, 0, NULL, 0);
-
-    return value != REG_NOMATCH;
-}
-
-// returns the length of the consumed segment. after running the function, the buffer_offset will
-// still point to the beginning of the consumed segment; you must increment it by the consumed
-// segment's length yourself
-static int regex_consume(const regex_t *regex, char buffer[LEX_BUFFER_SIZE], int *buffer_offset, FILE *file) {
+// Returns the length of the segment in the buffer that matches the regex, or -1 if there is no match.
+// Handles file reading and buffering automatically, but will not change the position of buffer_offset
+// relative to the data; you must increment it by the consumed segment's length yourself
+static int regex_peek(const regex_t *regex, char buffer[LEX_BUFFER_SIZE], int *buffer_offset, FILE *file) {
 
     // check if buffer_offset is beyond the halfway point, which means that we're running out of space!
     if (*buffer_offset > LEX_BUFFER_SIZE / 2) {
@@ -44,7 +36,8 @@ static int regex_consume(const regex_t *regex, char buffer[LEX_BUFFER_SIZE], int
     // TODO capture and return matches
     regmatch_t matches[8];
 
-    regexec(regex, buffer + *buffer_offset, 8, matches, 0);
+    if (regexec(regex, buffer + *buffer_offset, 8, matches, 0) == REG_NOMATCH)
+        return -1;
 
     return matches[0].rm_eo;
 }
@@ -81,11 +74,15 @@ int lex(const char *filepath) {
 
     int buffer_offset = 0;
 
-    if (regex_peek(&test, buffer, 0)) {
+    int match_length = regex_peek(&test, buffer, &buffer_offset, file);
+
+    if (match_length != -1) {
+
         printf("Pattern found. Here is the match:\n");
-        int match_length = regex_consume(&test, buffer, &buffer_offset, file);
         printf("%.*s\n", match_length, buffer + buffer_offset);
+
     } else {
+
         printf("Pattern not found.\n");
     }
 
