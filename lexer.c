@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <regex.h>
 #include <string.h>
+#include <stdlib.h>
 
 #include "lexer.h"
 
@@ -67,7 +68,12 @@ int lex_file(const char *filepath, Token **tokens_out) {
         return 1;
     }
 
-    // init buffer
+    // init output array
+    // TODO remember to realloc if we need more space
+    *tokens_out = malloc(sizeof(Token) * 1024);
+    int token_count = 0;
+
+    // init file buffer
     char buffer[LEX_BUFFER_SIZE] = {0};
     fread(buffer, sizeof(char), LEX_BUFFER_SIZE - 1, file);
 
@@ -80,17 +86,18 @@ int lex_file(const char *filepath, Token **tokens_out) {
         int match_length;
 
         // try buffer against every token type
-        for (int i = 0; i < TOKEN_TYPE_COUNT; i++) {
+        for (token_t token_type = 0; token_type < TOKEN_TYPE_COUNT; token_type++) {
 
-            match_length = regex_peek(&tokens[i], buffer, &buffer_offset, file);
+            match_length = regex_peek(&tokens[token_type], buffer, &buffer_offset, file);
 
             if (match_length == -1)
                 continue;
 
-            // matched
-            // TODO add token object to list instead of just printing the token string
-            printf("<%d>: %.*s\n", i, match_length, buffer + buffer_offset);
-            state = i == TKN_EOF ? 2 : 1;
+            // matched; add token object to list
+            EmptyToken *token = (EmptyToken *) &(*tokens_out)[token_count++];
+            token->type = token_type;
+
+            state = token_type == TKN_EOF ? 2 : 1;
             break;
         }
 

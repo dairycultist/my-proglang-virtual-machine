@@ -3,6 +3,8 @@
 
 typedef int token_t;
 
+#define TYPE_OF_TKN(token_ptr) (*(token_t *) (token_ptr))
+
 #define TKN_WORD 0
 #define TKN_EOF 1
 
@@ -12,13 +14,11 @@ typedef struct {
 
 typedef struct {
     token_t type;
-    token_t *next;
     char *value; // for string literals, keywords, and function/variable names
 } StringToken;
 
 typedef struct {
     token_t type;
-    token_t *next;
     int value;
 } IntToken;
 

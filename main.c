@@ -17,5 +17,10 @@ int main(int argc, char **argv) {
     if (lex_file(argv[1], &tokens))
         return 1;
 
+    for (int i = 0; TYPE_OF_TKN(tokens + i) != TKN_EOF; i++) {
+
+        printf("<%d>: (X)\n", TYPE_OF_TKN(tokens + i));
+    }
+
     return 0;
 }
