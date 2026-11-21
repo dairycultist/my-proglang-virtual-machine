@@ -19,10 +19,18 @@ int main(int argc, char **argv) {
 
     for (int i = 0; TYPE_OF_TKN(tokens + i) != TKN_EOF; i++) {
 
-        if (TYPE_OF_TKN(tokens + i) == TKN_WORD) {
-            printf("<%d>: %s\n", TYPE_OF_TKN(tokens + i), ((StringToken *) tokens + i)->value);
+        token_t type = TYPE_OF_TKN(tokens + i);
+        int value = TKN_TYPE_VALUE(type);
+
+        if (value == VALUE_STRING) {
+            printf("<%d>: %s\n", type, ((StringToken *) tokens + i)->value);
+        } else if (value == VALUE_INT) {
+            printf("<%d>: %d\n", type, ((IntToken *) tokens + i)->value);
+        } else if (value == VALUE_EMPTY) {
+            printf("<%d>: (X)\n", type);
         } else {
-            printf("<%d>: (X)\n", TYPE_OF_TKN(tokens + i));
+            printf("Invalid token type/value detected.");
+            return 1;
         }
     }
 
