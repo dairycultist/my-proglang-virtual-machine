@@ -1,8 +1,6 @@
 #ifndef LEXER_H
 #define LEXER_H
 
-typedef int token_t;
-
 #define TYPE_OF_TOKEN(token_ptr) (*(token_t *) (token_ptr))
 #define TOKEN_TYPE_VALUE(token_type) ( \
     token_type == TKN_WORD ?         \
@@ -19,11 +17,12 @@ typedef int token_t;
 #define VALUE_STRING 2
 #define VALUE_INT 3
 
-#define TOKEN_TYPE_COUNT 3
-
-#define TKN_WORD 0
-#define TKN_INT 1
-#define TKN_EOF 2
+typedef enum {
+    TKN_WORD,
+    TKN_INT,
+    TKN_EOF,
+    TOKEN_TYPE_COUNT // not a token type, but gets conveniently assigned the amount of token types
+} token_t;
 
 typedef struct {
     token_t type;
