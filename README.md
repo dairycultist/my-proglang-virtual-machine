@@ -6,7 +6,9 @@ the programming language specs
 - interpreted (not with bytecode)
 - strong typing
 - function overloading is a thing
-- functional; functions have no hidden side effects (i.e. 'imperative' functions mutate the state through their output parameters)
+- functional; functions have no hidden side effects
+  - 'imperative' functions mutate the state through their output parameters
+  - mutable global variables don't exist
 
 
 
@@ -25,7 +27,7 @@ print(my_var); // "20"
 
 ## Libraries
 
-Libraries are how you share functions (and constants?) between files. Functions that belong to a library have external linkage. Otherwise, all functions (and global variables) have internal linkage.
+Libraries are how you share functions and global-scope constants between files. By default, functions and global-scope constants have internal linkage. Declaring them as part of a library switches them to external linkage.
 
 There is no explicit importing of libraries; all libraries that can be available to your program, are (built-in libraries aren't bundled with your program so there's no bloat, and libraries you define as part of your program are, well, part of your program).
 
