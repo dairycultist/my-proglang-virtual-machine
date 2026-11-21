@@ -5,11 +5,13 @@ typedef int token_t;
 
 #define TYPE_OF_TKN(token_ptr) (*(token_t *) (token_ptr))
 #define TKN_TYPE_VALUE(token_value) (\
-    token_value == TKN_WORD ?\
-        VALUE_STRING :\
-    token_value == TKN_EOF ?\
-        VALUE_EMPTY :\
-        VALUE_INVALID\
+    token_value == TKN_WORD ?        \
+        VALUE_STRING :               \
+    token_value == TKN_INT ?         \
+        VALUE_INT :                  \
+    token_value == TKN_EOF ?         \
+        VALUE_EMPTY :                \
+        VALUE_INVALID                \
 )
 
 #define VALUE_INVALID -1
@@ -17,8 +19,11 @@ typedef int token_t;
 #define VALUE_STRING 2
 #define VALUE_INT 3
 
+#define TOKEN_TYPE_COUNT 3
+
 #define TKN_WORD 0
-#define TKN_EOF 1
+#define TKN_INT 1
+#define TKN_EOF 2
 
 typedef struct {
     token_t type;

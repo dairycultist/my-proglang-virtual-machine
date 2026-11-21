@@ -22,14 +22,14 @@ int main(int argc, char **argv) {
         token_t type = TYPE_OF_TKN(tokens + i);
         int value = TKN_TYPE_VALUE(type);
 
-        if (value == VALUE_STRING) {
+        if (value == VALUE_EMPTY) {
+            printf("<%d>;\n", type);
+        } else if (value == VALUE_STRING) {
             printf("<%d>: %s\n", type, ((StringToken *) tokens + i)->value);
         } else if (value == VALUE_INT) {
             printf("<%d>: %d\n", type, ((IntToken *) tokens + i)->value);
-        } else if (value == VALUE_EMPTY) {
-            printf("<%d>: (X)\n", type);
         } else {
-            printf("Invalid token type/value detected.");
+            printf("Invalid token type/value detected following lexing.");
             return 1;
         }
     }

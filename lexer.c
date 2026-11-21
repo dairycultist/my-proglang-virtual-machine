@@ -42,8 +42,6 @@ static int regex_create(regex_t *restrict regex, const char *restrict pattern) {
     }
 }
 
-#define TOKEN_TYPE_COUNT 2
-
 static regex_t tokens[TOKEN_TYPE_COUNT];
 
 int init_lexer() {
@@ -53,6 +51,7 @@ int init_lexer() {
     // - they all end with \s* to consume whitespace/newlines
     return
        regex_create(&tokens[TKN_WORD], "^([a-zA-Z_]+)\\s*")
+    || regex_create(&tokens[TKN_INT], "^(-?[0-9]+)\\s*")
     || regex_create(&tokens[TKN_EOF], "^$");
 }
 
@@ -93,21 +92,49 @@ int lex_file(const char *filepath, Token **tokens_out) {
                 continue;
 
             // matched; add token object to list
-            if (token_type == TKN_WORD) {
+            switch (TKN_TYPE_VALUE(token_type)) {
 
-                StringToken *token = (StringToken *) &(*tokens_out)[token_count++];
-                token->type = token_type;
+                case VALUE_EMPTY: {
 
-                int len = matches[1].rm_eo - matches[1].rm_so;
+                    EmptyToken *token = (EmptyToken *) &(*tokens_out)[token_count++];
+                    token->type = token_type;
+                    break;
+                }
 
-                token->value = malloc(sizeof(char) * (len + 1));
-                token->value[len] = '\0';
-                memcpy(token->value, buffer + buffer_offset + matches[1].rm_so, len);
+                case VALUE_STRING: {
 
-            } else {
+                    StringToken *token = (StringToken *) &(*tokens_out)[token_count++];
+                    token->type = token_type;
 
-                EmptyToken *token = (EmptyToken *) &(*tokens_out)[token_count++];
-                token->type = token_type;
+                    int len = matches[1].rm_eo - matches[1].rm_so;
+
+                    token->value = malloc(sizeof(char) * (len + 1));
+                    token->value[len] = '\0';
+                    memcpy(token->value, buffer + buffer_offset + matches[1].rm_so, len);
+                    break;
+                }
+
+                case VALUE_INT: {
+
+                    IntToken *token = (IntToken *) &(*tokens_out)[token_count++];
+                    token->type = token_type;
+                    
+                    // we don't wanna make a separate string to read from, so just temporarily null-terminate the match
+                    char hold = buffer[buffer_offset + matches[1].rm_eo];
+                    buffer[buffer_offset + matches[1].rm_eo] = '\0';
+
+                    token->value = (int) strtol(buffer + buffer_offset + matches[1].rm_so, NULL, 10);
+
+                    buffer[buffer_offset + matches[1].rm_eo] = hold;
+                    break;
+                }
+                
+                default:
+
+                    printf("Invalid token type/value detected during lexing.");
+
+                    fclose(file);
+                    return 1;
             }
 
             state = token_type == TKN_EOF ? 2 : 1;
