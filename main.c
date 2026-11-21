@@ -19,7 +19,11 @@ int main(int argc, char **argv) {
 
     for (int i = 0; TYPE_OF_TKN(tokens + i) != TKN_EOF; i++) {
 
-        printf("<%d>: (X)\n", TYPE_OF_TKN(tokens + i));
+        if (TYPE_OF_TKN(tokens + i) == TKN_WORD) {
+            printf("<%d>: %s\n", TYPE_OF_TKN(tokens + i), ((StringToken *) tokens + i)->value);
+        } else {
+            printf("<%d>: (X)\n", TYPE_OF_TKN(tokens + i));
+        }
     }
 
     return 0;

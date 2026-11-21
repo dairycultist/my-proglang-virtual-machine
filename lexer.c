@@ -10,7 +10,7 @@
 // Returns the length of the segment in the buffer that matches the regex, or -1 if there is no match.
 // Handles file reading and buffering automatically, but will not change the position of buffer_offset
 // relative to the data; you must increment it by the consumed segment's length yourself
-static int regex_peek(const regex_t *regex, char buffer[LEX_BUFFER_SIZE], int *buffer_offset, FILE *file) {
+static int regex_peek(const regex_t *regex, regmatch_t matches[8], char buffer[LEX_BUFFER_SIZE], int *buffer_offset, FILE *file) {
 
     // check if we're running out of space in the buffer
     if (*buffer_offset > LEX_BUFFER_SIZE / 2) {
@@ -27,10 +27,7 @@ static int regex_peek(const regex_t *regex, char buffer[LEX_BUFFER_SIZE], int *b
         *buffer_offset = 0;
     }
 
-    // return the length of the consumed segment
-    // TODO capture and return matches
-    regmatch_t matches[8];
-
+    // return the length of the consumed segment; capture and return matches
     if (regexec(regex, buffer + *buffer_offset, 8, matches, 0) == REG_NOMATCH)
         return -1;
 
@@ -55,7 +52,7 @@ int init_lexer() {
     // - they all start with ^ because duh
     // - they all end with \s* to consume whitespace/newlines
     return
-       regex_create(&tokens[TKN_WORD], "^[a-zA-Z_]+\\s*")
+       regex_create(&tokens[TKN_WORD], "^([a-zA-Z_]+)\\s*")
     || regex_create(&tokens[TKN_EOF], "^$");
 }
 
@@ -85,17 +82,33 @@ int lex_file(const char *filepath, Token **tokens_out) {
         int state = 0; // 0 for unmatched, 1 for matched, 2 for EOF
         int match_length;
 
+        regmatch_t matches[8];
+
         // try buffer against every token type
         for (token_t token_type = 0; token_type < TOKEN_TYPE_COUNT; token_type++) {
 
-            match_length = regex_peek(&tokens[token_type], buffer, &buffer_offset, file);
+            match_length = regex_peek(&tokens[token_type], matches, buffer, &buffer_offset, file);
 
             if (match_length == -1)
                 continue;
 
             // matched; add token object to list
-            EmptyToken *token = (EmptyToken *) &(*tokens_out)[token_count++];
-            token->type = token_type;
+            if (token_type == TKN_WORD) {
+
+                StringToken *token = (StringToken *) &(*tokens_out)[token_count++];
+                token->type = token_type;
+
+                int len = matches[1].rm_eo - matches[1].rm_so;
+
+                token->value = malloc(sizeof(char) * (len + 1));
+                token->value[len] = '\0';
+                memcpy(token->value, buffer + buffer_offset + matches[1].rm_so, len);
+
+            } else {
+
+                EmptyToken *token = (EmptyToken *) &(*tokens_out)[token_count++];
+                token->type = token_type;
+            }
 
             state = token_type == TKN_EOF ? 2 : 1;
             break;
