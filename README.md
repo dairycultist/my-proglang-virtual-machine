@@ -6,13 +6,16 @@ the programming language specs
 - interpreted (not with bytecode)
 - strong typing
 - function overloading is a thing
-- functional; functions have no hidden side effects
-  - 'imperative' functions mutate the state through their output parameters
-  - mutable global variables don't exist
 
+## Functional programming
 
+By principle, functions have no hidden side effects. Functions mutate the state solely through their output parameters; mutable global variables aren't permitted (i.e. all global variables are constant).
 
-functions are always pass-by-reference (even for inline declarations, which just create a temporary variable to reference). parameters are constant/immutable unless specified as mutable. returning isn't a thing (just use a mutable output variable)
+All variables/function parameters are constant (immutable) unless flagged with the `mut` keyword, in which case they are mutable.
+
+Function parameters are always pass-by-reference. This includes arguments passed as inline declarations, in which case a temporary variable is created to reference (if the parameter is mutable, the function can modify this value, but it will disappear once the function returns).
+
+Functions do not return values; to replicate this functionality, use output parameters.
 
 ```
 fn foo(mut int x, int y) {
@@ -35,7 +38,12 @@ The virtual machine comes with built-in libraries. These include:
 - `GL` (implements sdl2+glew+opengl abstractly for you)
   - exposes helpers for drawing sprites/text of different rotations, scales, and tints
   - exposes helpers for loading objs, creating meshes manually, drawing those, also loading custom shaders
-- `Math` (your bog-standard math library, stuff like trig)
+- `Math`
+  - `:sin(float rad)`
+  - `:cos(float rad)`
+  - `:abs(int x)`
+  - `:abs(float x)`
+  - etc
 
 ```
 fn LibraryName:function_in_library() {
