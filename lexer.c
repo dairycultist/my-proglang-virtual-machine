@@ -92,18 +92,18 @@ int lex_file(const char *filepath, Token **tokens_out) {
                 continue;
 
             // matched; add token object to list
-            switch (TKN_TYPE_VALUE(token_type)) {
+            switch (TOKEN_TYPE_VALUE(token_type)) {
 
                 case VALUE_EMPTY: {
 
-                    EmptyToken *token = (EmptyToken *) &(*tokens_out)[token_count++];
+                    EmptyToken *token = &((*tokens_out)[token_count++].empty_token);
                     token->type = token_type;
                     break;
                 }
 
                 case VALUE_STRING: {
 
-                    StringToken *token = (StringToken *) &(*tokens_out)[token_count++];
+                    StringToken *token = &((*tokens_out)[token_count++].string_token);
                     token->type = token_type;
 
                     int len = matches[1].rm_eo - matches[1].rm_so;
@@ -116,7 +116,7 @@ int lex_file(const char *filepath, Token **tokens_out) {
 
                 case VALUE_INT: {
 
-                    IntToken *token = (IntToken *) &(*tokens_out)[token_count++];
+                    IntToken *token = &((*tokens_out)[token_count++].int_token);
                     token->type = token_type;
                     
                     // we don't wanna make a separate string to read from, so just temporarily null-terminate the match

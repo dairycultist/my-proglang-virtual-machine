@@ -3,13 +3,13 @@
 
 typedef int token_t;
 
-#define TYPE_OF_TKN(token_ptr) (*(token_t *) (token_ptr))
-#define TKN_TYPE_VALUE(token_value) (\
-    token_value == TKN_WORD ?        \
+#define TYPE_OF_TOKEN(token_ptr) (*(token_t *) (token_ptr))
+#define TOKEN_TYPE_VALUE(token_type) ( \
+    token_type == TKN_WORD ?         \
         VALUE_STRING :               \
-    token_value == TKN_INT ?         \
+    token_type == TKN_INT ?          \
         VALUE_INT :                  \
-    token_value == TKN_EOF ?         \
+    token_type == TKN_EOF ?          \
         VALUE_EMPTY :                \
         VALUE_INVALID                \
 )
