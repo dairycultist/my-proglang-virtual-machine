@@ -46,5 +46,6 @@ typedef union {
 
 int init_lexer();
 int lex_file(const char *filepath, Token **tokens_out);
+void print_tokens(Token *tokens);
 
 #endif

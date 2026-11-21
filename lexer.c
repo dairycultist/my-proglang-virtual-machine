@@ -162,3 +162,28 @@ int lex_file(const char *filepath, Token **tokens_out) {
     fclose(file);
     return 0;
 }
+
+// for debugging and stuff
+void print_tokens(Token *tokens) {
+
+    for (int i = 0; TYPE_OF_TOKEN(tokens + i) != TKN_EOF; i++) {
+
+        token_t type = TYPE_OF_TOKEN(tokens + i);
+        int value = TOKEN_TYPE_VALUE(type);
+
+        switch (value) {
+            case VALUE_EMPTY:
+                printf("<%d>;\n", type);
+                break;
+            case VALUE_STRING:
+                printf("<%d>: %s\n", type, tokens[i].string_token.value);
+                break;
+            case VALUE_INT:
+                printf("<%d>: %d\n", type, tokens[i].int_token.value);
+                break;
+            default:
+                printf("<%d is an invalid token type/value>", type);
+                break;
+        }
+    }
+}
