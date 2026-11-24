@@ -44,6 +44,8 @@ The virtual machine comes with built-in libraries. These include:
   - `:abs(int x)`
   - `:abs(float x)`
   - etc
+- `CLI` stuff like reading and writing to the command line
+- `Client` and `Server` are for netcode
 
 ```
 fn LibraryName:function_in_library() {
