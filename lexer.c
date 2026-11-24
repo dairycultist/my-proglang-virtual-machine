@@ -184,17 +184,38 @@ void print_tokens(Token *tokens) {
     for (int i = 0; TYPE_OF_TOKEN(tokens + i) != TKN_EOF; i++) {
 
         token_t type = TYPE_OF_TOKEN(tokens + i);
+
+        switch (type) {
+
+            case TKN_ASSIGN: printf("\t\t="); break;
+            case TKN_STMT_END: printf("\t\t;"); break;
+            case TKN_BLOCK_START: printf("\t\t{"); break;
+            case TKN_BLOCK_END: printf("\t\t}"); break;
+            case TKN_PAREN_OPEN: printf("\t\t("); break;
+            case TKN_PAREN_CLOSE: printf("\t\t)"); break;
+            case TKN_COMMA: printf("\t\t,"); break;
+
+            case TKN_FUNCTION: printf("\t\tfn"); break;
+            case TKN_MUTABLE: printf("\t\tmut"); break;
+            case TKN_TYPE_INT: printf("\t\tint"); break;
+
+            case TKN_LIB_IDENTIFIER: printf("<lib:id>\t"); break;
+            case TKN_IDENTIFIER: printf("<id>\t\t"); break;
+
+            case TKN_INT: printf("<intval>\t"); break;
+        }
+
         int value = TOKEN_TYPE_VALUE(type);
 
         switch (value) {
             case VALUE_EMPTY:
-                printf("<%d>;\n", type);
+                printf("\n");
                 break;
             case VALUE_STRING:
-                printf("<%d>: %s\n", type, tokens[i].string_token.value);
+                printf("%s\n", tokens[i].string_token.value);
                 break;
             case VALUE_INT:
-                printf("<%d>: %d\n", type, tokens[i].int_token.value);
+                printf("%d\n", tokens[i].int_token.value);
                 break;
             default:
                 printf("<%d is an invalid token type/has an invalid value>", type);
