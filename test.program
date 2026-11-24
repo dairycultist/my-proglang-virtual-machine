@@ -1,1 +1,12 @@
-hello this is a test doc 123 10 420 -60 words_can_have_underscores and UPPERCASE LETTERS
+fn foo(mut int x, int y) {
+  x = 20;
+  y = 30;
+}
+
+mut int my_var = 10;
+foo(mut my_var);
+CLI:print(my_var);
+
+fn LibraryName:function_in_library2() {}
+
+LibraryName:function_in_library2();

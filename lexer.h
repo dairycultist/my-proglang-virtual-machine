@@ -3,10 +3,21 @@
 
 #define TYPE_OF_TOKEN(token_ptr) (*(token_t *) (token_ptr))
 #define TOKEN_TYPE_VALUE(token_type) ( \
-    token_type == TKN_WORD ?         \
+    token_type == TKN_LIB_IDENTIFIER ||\
+    token_type == TKN_IDENTIFIER ?   \
         VALUE_STRING :               \
     token_type == TKN_INT ?          \
         VALUE_INT :                  \
+    token_type == TKN_ASSIGN ||      \
+    token_type == TKN_STMT_END ||    \
+    token_type == TKN_BLOCK_START || \
+    token_type == TKN_BLOCK_END ||   \
+    token_type == TKN_PAREN_OPEN ||  \
+    token_type == TKN_PAREN_CLOSE || \
+    token_type == TKN_COMMA ||       \
+    token_type == TKN_FUNCTION ||    \
+    token_type == TKN_MUTABLE ||     \
+    token_type == TKN_TYPE_INT ||    \
     token_type == TKN_EOF ?          \
         VALUE_EMPTY :                \
         VALUE_INVALID                \
@@ -18,8 +29,27 @@
 #define VALUE_INT 3
 
 typedef enum {
-    TKN_WORD,
+    // symbolic
+    TKN_ASSIGN,
+    TKN_STMT_END,
+    TKN_BLOCK_START,
+    TKN_BLOCK_END,
+    TKN_PAREN_OPEN,
+    TKN_PAREN_CLOSE,
+    TKN_COMMA,
+
+    // reserved keywords
+    TKN_FUNCTION,
+    TKN_MUTABLE,
+    TKN_TYPE_INT,
+
+    // value string
+    TKN_LIB_IDENTIFIER,
+    TKN_IDENTIFIER,
+
+    // value int
     TKN_INT,
+
     TKN_EOF,
     TOKEN_TYPE_COUNT // not a token type, but gets conveniently assigned the amount of token types
 } token_t;

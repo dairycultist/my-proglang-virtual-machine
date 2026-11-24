@@ -48,9 +48,24 @@ int init_lexer() {
 
     // create all our regexes
     // - they all start with ^ because duh
-    // - they all end with \s* to consume whitespace/newlines
-    return
-       regex_create(&tokens[TKN_WORD], "^([a-zA-Z_]+)\\s*")
+    // - they all end with \s* or \s+ to consume whitespace/newlines
+
+    // [a-zA-Z](_?[a-zA-Z0-9])* gives us an identifier that must start with a letter,
+    // can only have internal contiguous sequences of at most a single underscore, and
+    // can otherwise contain both letters and numbers
+    return 0
+    || regex_create(&tokens[TKN_ASSIGN], "^=\\s*")
+    || regex_create(&tokens[TKN_STMT_END], "^;\\s*")
+    || regex_create(&tokens[TKN_BLOCK_START], "^\\{\\s*")
+    || regex_create(&tokens[TKN_BLOCK_END], "^\\}\\s*")
+    || regex_create(&tokens[TKN_PAREN_OPEN], "^\\(\\s*")
+    || regex_create(&tokens[TKN_PAREN_CLOSE], "^\\)\\s*")
+    || regex_create(&tokens[TKN_COMMA], "^\\,\\s*")
+    || regex_create(&tokens[TKN_FUNCTION], "^fn\\s+")
+    || regex_create(&tokens[TKN_MUTABLE], "^mut\\s+")
+    || regex_create(&tokens[TKN_TYPE_INT], "^int\\s+")
+    || regex_create(&tokens[TKN_LIB_IDENTIFIER], "^([a-zA-Z](_?[a-zA-Z0-9])*:[a-zA-Z](_?[a-zA-Z0-9])*)\\s*")
+    || regex_create(&tokens[TKN_IDENTIFIER], "^([a-zA-Z](_?[a-zA-Z0-9])*)\\s*")
     || regex_create(&tokens[TKN_INT], "^(-?[0-9]+)\\s*")
     || regex_create(&tokens[TKN_EOF], "^$");
 }
@@ -182,7 +197,7 @@ void print_tokens(Token *tokens) {
                 printf("<%d>: %d\n", type, tokens[i].int_token.value);
                 break;
             default:
-                printf("<%d is an invalid token type/value>", type);
+                printf("<%d is an invalid token type/has an invalid value>", type);
                 break;
         }
     }
