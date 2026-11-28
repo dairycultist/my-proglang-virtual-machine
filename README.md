@@ -41,7 +41,7 @@ Variables cannot store a reference to another variable (which would allow a func
 
 ### Functions
 
-Function parameters are constant (immutable) unless declared with the `mut` keyword, in which case they are mutable. When passing a variable as a mutable argument to a function, you must explicitly label it with the `mut` keyword, *even though* the function's prototype already labels it as mutable (see below `foo(mut a, b);`); this helps with readability as well as facilitates function overloading. 
+Function parameters are constant (immutable) unless declared with the `mut` keyword, in which case they are mutable. When passing a variable as a mutable argument to a function, you must explicitly label it with the `mut` keyword, *even though* the function's prototype already labels it as mutable (see below `foo(mut my_num, 5);`); this helps with readability as well as facilitates function overloading. 
 
 Function parameters are *always* pass-by-reference. This includes arguments passed as inline declarations, in which case a temporary variable is created to reference (if the parameter is mutable, the function can freely modify this value, but it will disappear once the function returns).
 
@@ -58,10 +58,9 @@ fn foo(mut int x, int y) {
 }
 
 fn main() {
-  mut int a = 10;
-  mut int b = 10;
-  foo(mut a, b);
-  CLI:print(a); // "20"
+  mut int my_num = 10;
+  foo(mut my_num, 5);
+  CLI:print(my_num); // "20"
 }
 ```
 
@@ -69,9 +68,11 @@ fn main() {
 
 By default, everything has internal linkage.
 
-You can specify a symbol have external linkage with `:` (see below `:PI` and `:abs(...)`). Only symbols in the global scope can have external linkage.
+You can specify a symbol have external linkage with `:` (see below `:PI` and `:abs(...)`). Only symbols in the global scope of a file labeled with a package name can have external linkage.
 
-Symbols with external linkage are accessed through their package (see below `Math.abs(...);`). There is no explicit importing of packages (all are linked automatically).
+To label a file with a package name, the first line of the file must be the keyword `package` followed by the namespace of the package (convention is to use UpperCamelCase).
+
+Symbols with external linkage are accessed through their package (see below `Math:abs(...);`). There is no explicit importing of packages (all are linked automatically).
 
 ```
 package Math
@@ -90,7 +91,7 @@ fn :abs(mut int x) {
 // it has internal linkage.
 fn main() {
   mut int my_num = 10;
-  Math.abs(mut my_num);
+  Math:abs(mut my_num);
   CLI:print(my_num); // "20"
 }
 ```
