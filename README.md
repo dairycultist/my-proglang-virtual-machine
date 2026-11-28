@@ -17,9 +17,6 @@ At some point it'd be nice for the lang to be used for making desktop apps with 
 package Math
 
 // "real" is the implementation-agnostic equivalent of float/double.
-// Because this is preceded by ":", it has external linkage (accessed from other
-// files with Math:PI). By default, everything has internal linkage; only functions
-// and global-scope constants (aka not mutable) can have external linkage.
 real :PI = 3.141592;
 
 fn :abs(mut int x) {
@@ -38,6 +35,8 @@ fn main() {
   print(my_num); // 10
 }
 ```
+
+In the above example code (two files), the global-scope constant `:PI` and the function `:abs` are preceded by a `:` to indicate that they have external linkage. You access these through their package, which is demonstrated in the second file. By default, everything has internal linkage; only **functions** and **global-scope constants** can have external linkage (i.e. a variable in the global scope flagged with `mut` cannot also be flagged with `:`).
 
 ## Functional programming
 
