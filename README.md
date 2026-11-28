@@ -24,12 +24,14 @@ The primitives are:
 - `bool`; default value `false`
 - `char`; default value `\0`
 
-Arrays of a type behave as their own type (e.g. `int[]` can't be passed as a parameter of type `int`). Arrays are homogeneous. The size of an array is fixed at time of declaration; however, this size can be determined at run-time (see below). The size of an array is stored by the array and can be accessed through the `sizeof` keyword (see below).
+Arrays of a type behave as their own type (e.g. `int[]` can't be passed as a parameter of type `int`). Arrays are homogeneous. Arrays must be declared with a size; however, this size can be determined at run-time (see below), and can be changed after declaration through the `resize` keyword (see below). The size of an array is stored by the array and can be accessed through the `sizeof` keyword (see below).
 
 ```
 int x = 10;
 mut int[x] my_array; // an array of length 10 filled with 0
-int size = sizeof my_array; // 10
+CLI:print(sizeof my_array); // 10
+resize[x * 2] my_array;
+CLI:print(sizeof my_array); // 20
 ```
 
 Strings are represented as char arrays (see below). Strings are NOT null-terminated.
