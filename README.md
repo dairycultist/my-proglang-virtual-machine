@@ -14,15 +14,14 @@ At some point it'd be nice for the lang to be used for making desktop apps with 
 # Ideas idk
 
 ```
-package Math
+package MyPkg
 
 // "real" is the implementation-agnostic equivalent of float/double.
 real :PI = 3.141592;
 
-fn :abs(mut int x) {
-  if (x < 0) {
-    x = -x;
-  }
+fn :foo(mut int x, int y) {
+  x = 20;
+  // y = 30; This would be a runtime error (assignment to parameter y of function foo which is not mutable).
 }
 ```
 
@@ -30,34 +29,19 @@ fn :abs(mut int x) {
 // The main function is your program's entrypoint. because it isn't preceded by ":",
 // it has internal linkage.
 fn main() {
-  mut int my_num = -10;
-  Math:abs(mut my_num);
-  print(my_num); // 10
+  mut int my_num = 10;
+  MyPkg:foo(mut my_num);
+  CLI:print(my_num); // "20"
 }
 ```
 
-*All* variables/function parameters are constant (immutable) unless flagged with the `mut` keyword, in which case they are mutable. When passing a variable as a mutable argument to a function, you must explicitly label it with the `mut` keyword (*even though* the function's prototype already labels it as mutable; see above `Math:abs(mut my_num);`). Variables in the global scope cannot be flagged with the `mut` keyword and so are always constant.
+*All* variables/function parameters are constant (immutable) unless declared with the `mut` keyword, in which case they are mutable. When passing a variable as a mutable argument to a function, you must explicitly label it with the `mut` keyword (*even though* the function's prototype already labels it as mutable; see above `MyPkg:foo(mut my_num);`). Variables in the global scope cannot be flagged with the `mut` keyword and so are always constant.
 
 Function parameters are *always* pass-by-reference. This includes arguments passed as inline declarations, in which case a temporary variable is created to reference (if the parameter is mutable, the function can freely modify this value, but it will disappear once the function returns).
 
 Functions do not return values; the sole output of functions is their mutable parameters (recall that mutable global variables don't exist).
 
-By default, everything has internal linkage; only things in the global scope can have external linkage (i.e. functions and global-scope constants). This is indicated by `:` preceding their keyword (see above `:PI` and `:abs(...)`). You access these through their package (see above `Math:abs(...);`).
-
-```
-fn foo(mut int x, int y) {
-  x = 20;
-  y = 30; // runtime error: assignment to parameter y of function foo which is not mutable
-}
-
-mut int my_var = 10;
-foo(mut my_var);
-print(my_var); // "20"
-```
-
-## Libraries
-
-There is no explicit importing of libraries; all libraries that can be available to your program, are (built-in libraries aren't bundled with your program so there's no bloat, and libraries you define as part of your program are, well, part of your program).
+By default, everything has internal linkage; only things in the global scope can have external linkage (i.e. functions and global-scope constants). This is indicated by `:` preceding their keyword (see above `:PI` and `:foo(...)`). You access these through their package (see above `MyPkg:foo(...);`). There is no explicit importing of packages; all packages (both VM- and program-defined) are available to all files in your program.
 
 The virtual machine will come with built-in libraries. Some ideas:
 - `GL` (exposes helpers for opening windows and rendering things)
