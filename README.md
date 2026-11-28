@@ -98,7 +98,7 @@ fn :abs(mut int x) {
 // The main function is your program's entrypoint. because it isn't preceded by ":",
 // it has internal linkage.
 fn main() {
-  mut int my_num = 10;
+  mut int my_num = -20;
   Math:abs(mut my_num);
   CLI:print(my_num); // "20"
 }
