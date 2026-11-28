@@ -1,13 +1,11 @@
 # my-proglang-virtual-machine
 
-A simple spec for a simple programming language. Ideally the VM would be written in C but it's easier to do that in JS so I'll do that as a proof-of-concept.
+Ideally the VM would be written in C but it's easier to do that in JS so I'll do that as a proof-of-concept.
 
-At some point it'd be nice for the lang to be used for making desktop apps with minimal boilerplate but we'll cross that bridge
+# Spec
 
-# Ideas idk
-
-The virtual machine will come with built-in libraries. Some ideas:
-- `GL` (exposes helpers for opening windows and rendering things)
+The virtual machine will come with built-in libraries (boilerplate!). Some ideas:
+- `GL` (exposes helpers for opening windows, rendering things, and overall just making desktop apps)
 - `Math` (standard math functions, e.g. `:sin(float rad, mut float out)`)
 - `CLI` (`:print(char[] string)`, `:readline(mut char[] string)`, etc)
 - `Client` and `Server` (for netcode! can open TCP, UDP, HTTP connections, whatever!)
