@@ -18,7 +18,7 @@ Features
 
 ### Types
 
-Technically this language lacks primitives because function parameters are always pass-by-reference. Nevertheless, the 'primitives' are:
+The primitives are:
 - `int`; default value `0`
 - `real` (for real numbers); default value `0.0`
 - `bool`; default value `false`
@@ -32,7 +32,12 @@ mut int[x] my_array; // an array of length 10 filled with 0
 int size = sizeof my_array; // 10
 ```
 
-Strings are represented as char arrays (e.g. `char[] x = "hello";` creates a char array of length 5). Strings are NOT null-terminated.
+Strings are represented as char arrays (see below). Strings are NOT null-terminated.
+
+```
+char[] my_string = "hello";
+CLI:print(sizeof my_string); // "5"
+```
 
 I have nooo idea how I'm gonna implement abstract data types.
 
@@ -73,7 +78,7 @@ By default, everything has internal linkage.
 
 You can specify a symbol have external linkage with `:` (see below `:PI` and `:abs(...)`). Only symbols in the global scope of a file labeled with a package name can have external linkage.
 
-To label a file with a package name, the first line of the file must be the keyword `package` followed by the namespace of the package (convention is to use UpperCamelCase).
+To label a file with a package name, the first line of the file must be the keyword `package` followed by the namespace of the package (convention is to use UpperCamelCase; see below `package Math`).
 
 Symbols with external linkage are accessed through their package (see below `Math:abs(...);`). There is no explicit importing of packages (all are linked automatically).
 
