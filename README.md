@@ -38,19 +38,21 @@ fn main() {
 The virtual machine will come with built-in libraries. Some ideas:
 - `GL` (exposes helpers for opening windows and rendering things)
 - `Math` (standard math functions, e.g. `:sin(float rad, mut float out)`)
-- `CLI` (`:print(idkhowtorepresentstrings)`, `:readline(mut idkhowtorepresentstrings)`, etc)
+- `CLI` (`:print(char[] string)`, `:readline(mut char[] string)`, etc)
 - `Client` and `Server` (for netcode! can open TCP, UDP, HTTP connections, whatever!)
 
 ### Types
 
-The primitives are `int`, `real` (for real numbers), and idk what I want for the rest.
+The primitives are `int`, `real` (for real numbers), `bool`, `char`.
 
-Arrays of a type count as their own type (e.g. `int[5]`). Arrays are homogeneous. The size of an array is fixed at time of declaration; however, this size can be determined at run-time (see below).
+Arrays of a type count as their own type (e.g. `int[5]`). Arrays are homogeneous. The size of an array is fixed at time of declaration; however, this size can be determined at run-time (see below). The size of an array is stored by the array and can be accessed through the `sizeof` keyword (e.g. `int size = sizeof my_array;`).
 
 ```
 int x = 10;
 int[x] y; // filled with 0
 ```
+
+Strings are represented as char arrays (e.g. `char[] x = "hello";` creates a char array of length 5).
 
 I have nooo idea how I'm gonna implement abstract data types.
 
@@ -65,6 +67,8 @@ Variables cannot store a reference to another variable (which would allow a func
 Function parameters are constant (immutable) unless declared with the `mut` keyword, in which case they are mutable. When passing a variable as a mutable argument to a function, you must explicitly label it with the `mut` keyword (*even though* the function's prototype already labels it as mutable; see above `MyPkg:foo(mut my_num);`).
 
 Function parameters are *always* pass-by-reference. This includes arguments passed as inline declarations, in which case a temporary variable is created to reference (if the parameter is mutable, the function can freely modify this value, but it will disappear once the function returns).
+
+Array parameters to functions needn't specify a size, in which case an array of any size may be passed. Otherwise, the array being passed must have a size equal to or greater than the parameter's size.
 
 Functions do not return values; the sole output of functions is their mutable parameters (recall that mutable global variables don't exist).
 
