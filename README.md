@@ -7,33 +7,10 @@ Planned features:
 - Strong typing
 - Functional (no hidden side effects)
 - Abstraction
-- function overloading is a thing
 
 At some point it'd be nice for the lang to be used for making desktop apps with minimal boilerplate but we'll cross that bridge
 
 # Ideas idk
-
-```
-package MyPkg
-
-// "real" is the implementation-agnostic equivalent of float/double.
-real :PI = 3.141592;
-
-fn :foo(mut int x, int y) {
-  x = 20;
-  // y = 30; This would be a runtime error (assignment to parameter y of function foo which is not mutable).
-}
-```
-
-```
-// The main function is your program's entrypoint. because it isn't preceded by ":",
-// it has internal linkage.
-fn main() {
-  mut int my_num = 10;
-  MyPkg:foo(mut my_num);
-  CLI:print(my_num); // "20"
-}
-```
 
 The virtual machine will come with built-in libraries. Some ideas:
 - `GL` (exposes helpers for opening windows and rendering things)
@@ -64,7 +41,7 @@ Variables cannot store a reference to another variable (which would allow a func
 
 ### Functions
 
-Function parameters are constant (immutable) unless declared with the `mut` keyword, in which case they are mutable. When passing a variable as a mutable argument to a function, you must explicitly label it with the `mut` keyword (*even though* the function's prototype already labels it as mutable; see above `MyPkg:foo(mut my_num);`).
+Function parameters are constant (immutable) unless declared with the `mut` keyword, in which case they are mutable. When passing a variable as a mutable argument to a function, you must explicitly label it with the `mut` keyword, *even though* the function's prototype already labels it as mutable (see below `foo(mut a, b);`); this helps with readability as well as facilitates function overloading. 
 
 Function parameters are *always* pass-by-reference. This includes arguments passed as inline declarations, in which case a temporary variable is created to reference (if the parameter is mutable, the function can freely modify this value, but it will disappear once the function returns).
 
@@ -72,10 +49,48 @@ Array parameters to functions needn't specify a size, in which case an array of 
 
 Functions do not return values; the sole output of functions is their mutable parameters (recall that mutable global variables don't exist).
 
+Functions can be overloaded.
+
+```
+fn foo(mut int x, int y) {
+  x = 20;
+  // y = 30; This would be a runtime error (assignment to parameter y of function foo which is not mutable).
+}
+
+fn main() {
+  mut int a = 10;
+  mut int b = 10;
+  foo(mut a, b);
+  CLI:print(a); // "20"
+}
+```
+
 ### Linkage
 
 By default, everything has internal linkage.
 
-You can specify a symbol have external linkage with `:` (see above `:PI` and `:foo(...)`). Only symbols in the global scope can have external linkage.
+You can specify a symbol have external linkage with `:` (see below `:PI` and `:abs(...)`). Only symbols in the global scope can have external linkage.
 
-Symbols with external linkage are accessed through their package (see above `MyPkg:foo(...);`). There is no explicit importing of packages (all are linked automatically).
+Symbols with external linkage are accessed through their package (see below `Math.abs(...);`). There is no explicit importing of packages (all are linked automatically).
+
+```
+package Math
+
+real :PI = 3.141592;
+
+fn :abs(mut int x) {
+  if (x < 0) {
+    x = -x;
+  }
+}
+```
+
+```
+// The main function is your program's entrypoint. because it isn't preceded by ":",
+// it has internal linkage.
+fn main() {
+  mut int my_num = 10;
+  Math.abs(mut my_num);
+  CLI:print(my_num); // "20"
+}
+```
