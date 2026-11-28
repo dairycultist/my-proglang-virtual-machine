@@ -41,9 +41,24 @@ The virtual machine will come with built-in libraries. Some ideas:
 - `CLI` (`:print(idkhowtorepresentstrings)`, `:readline(mut idkhowtorepresentstrings)`, etc)
 - `Client` and `Server` (for netcode! can open TCP, UDP, HTTP connections, whatever!)
 
+### Types
+
+The primitives are `int`, `real` (for real numbers), and idk what I want for the rest.
+
+Arrays of a type count as their own type (e.g. `int[5]`). Arrays are homogeneous. The size of an array is fixed at time of declaration; however, this size can be determined at run-time (see below).
+
+```
+int x = 10;
+int[x] y; // filled with 0
+```
+
+I have nooo idea how I'm gonna implement abstract data types.
+
 ### Variables
 
 Variables are constant (immutable) unless declared with the `mut` keyword, in which case they are mutable. Variables in the global scope cannot be flagged with the `mut` keyword and so are always constant.
+
+Variables cannot store a reference to another variable (which would allow a function to change a variable locally that affects another variable non-locally, violating 'no hidden side effects').
 
 ### Functions
 
