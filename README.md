@@ -20,13 +20,18 @@ Features
 
 ### Types
 
-Technically this language lacks primitives because function parameters are always pass-by-reference. Nevertheless, the 'primitives' are `int`, `real` (for real numbers), `bool`, and `char`.
+Technically this language lacks primitives because function parameters are always pass-by-reference. Nevertheless, the 'primitives' are:
+- `int`; default value `0`
+- `real` (for real numbers); default value `0.0`
+- `bool`; default value `false`
+- `char`; default value `\0`
 
-Arrays of a type behave as their own type (e.g. `int[]` can't be passed as a parameter of type `int`). Arrays are homogeneous. The size of an array is fixed at time of declaration; however, this size can be determined at run-time (see below). The size of an array is stored by the array and can be accessed through the `sizeof` keyword (e.g. `int size = sizeof my_array;`).
+Arrays of a type behave as their own type (e.g. `int[]` can't be passed as a parameter of type `int`). Arrays are homogeneous. The size of an array is fixed at time of declaration; however, this size can be determined at run-time (see below). The size of an array is stored by the array and can be accessed through the `sizeof` keyword (see below).
 
 ```
 int x = 10;
-mut int[x] y; // an array of length 10 filled with 0
+mut int[x] my_array; // an array of length 10 filled with 0
+int size = sizeof my_array; // 10
 ```
 
 Strings are represented as char arrays (e.g. `char[] x = "hello";` creates a char array of length 5). Strings are NOT null-terminated.
