@@ -36,17 +36,13 @@ fn main() {
 }
 ```
 
-In the above example code (two files), the global-scope constant `:PI` and the function `:abs` are preceded by a `:` to indicate that they have external linkage. You access these through their package, which is demonstrated in the second file. By default, everything has internal linkage; only **functions** and **global-scope constants** can have external linkage (i.e. a variable in the global scope flagged with `mut` cannot also be flagged with `:`).
-
-## Functional programming
-
-By principle, functions have no hidden side effects. Functions mutate the state solely through their output parameters; mutable global variables aren't permitted (i.e. all global variables are constant).
-
-All variables/function parameters are constant (immutable) unless flagged with the `mut` keyword, in which case they are mutable.
+**All variables/function parameters** are constant (immutable) unless flagged with the `mut` keyword, in which case they are mutable. When passing a variable as a mutable argument to a function, you must explicitly label it with the `mut` keyword (*even though* the function's prototype already labels it as mutable; see above `Math:abs(mut my_num);`).
 
 Function parameters are always pass-by-reference. This includes arguments passed as inline declarations, in which case a temporary variable is created to reference (if the parameter is mutable, the function can modify this value, but it will disappear once the function returns).
 
-Functions do not return values; to replicate this functionality, use output parameters.
+The sole output of functions is their mutable parameters (functions don't return values, and variables in the global scope must be constant).
+
+By default, everything has internal linkage; only things in the global scope can have external linkage (i.e. functions and global-scope constants). This is indicated by `:` preceding their keyword (see above `:PI` and `:abs(...)`). You access these through their package (see above `Math:abs(...);`).
 
 ```
 fn foo(mut int x, int y) {
@@ -63,15 +59,8 @@ print(my_var); // "20"
 
 There is no explicit importing of libraries; all libraries that can be available to your program, are (built-in libraries aren't bundled with your program so there's no bloat, and libraries you define as part of your program are, well, part of your program).
 
-The virtual machine comes with built-in libraries. These include:
-- `GL` (implements sdl2+glew+opengl abstractly for you)
-  - exposes helpers for drawing sprites/text of different rotations, scales, and tints
-  - exposes helpers for loading objs, creating meshes manually, drawing those, also loading custom shaders
-- `Math`
-  - `:sin(float rad)`
-  - `:cos(float rad)`
-  - `:abs(int x)`
-  - `:abs(float x)`
-  - etc
-- `CLI` stuff like reading and writing to the command line
-- `Client` and `Server` are for netcode
+The virtual machine will come with built-in libraries. Some ideas:
+- `GL` (exposes helpers for opening windows and rendering things)
+- `Math` (standard math functions, e.g. `:sin(float rad, mut float out)`)
+- `CLI` (`:print(idkhowtorepresentstrings)`, `:readline(mut idkhowtorepresentstrings)`, etc)
+- `Client` and `Server` (for netcode! can open TCP, UDP, HTTP connections, whatever!)
