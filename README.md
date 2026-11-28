@@ -1,11 +1,37 @@
 # my-proglang-virtual-machine
 
-Virtual machine written in C that runs a custom programming language, oriented towards minimal boilerplate for making desktop apps (because C is the only programming language I know how to make a window in and I am not doing that for every project).
+A simple spec for a simple programming language. Ideally the VM would be written in C but it's easier to do that in JS so I'll do that as a proof-of-concept.
 
-the programming language specs
-- interpreted (not with bytecode)
-- strong typing
+Planned features:
+- Interpreted
+- Strong typing
+- Functional (no hidden side effects)
+- Abstraction
 - function overloading is a thing
+
+At some point it'd be nice for the lang to be used for making desktop apps with minimal boilerplate but we'll cross that bridge
+
+# Ideas idk
+
+```
+package Math
+
+pkg real PI = 3.141592;
+
+pkg fn abs(mut int x) {
+  if (x < 0) {
+    x = -x;
+  }
+}
+```
+
+```
+fn main() {
+  mut int my_num = -10;
+  Math:abs(mut my_num);
+  print(my_num); // 10
+}
+```
 
 ## Functional programming
 
