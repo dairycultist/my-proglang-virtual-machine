@@ -51,13 +51,9 @@ There is no means for a variable to store a reference to another variable (which
 
 Function parameters are constant (immutable) unless declared with the `mut` keyword, in which case they are mutable. When passing a variable as a mutable argument to a function, you must explicitly label it with the `mut` keyword, *even though* the function's prototype already labels it as mutable (see below `foo(mut my_num, 5);`); this helps with readability as well as facilitates function overloading. 
 
-Function parameters are *always* pass-by-reference. This includes arguments passed as inline declarations, in which case a temporary variable is created to reference (if the parameter is mutable, the function can freely modify this value, but it will disappear once the function returns).
-
-Array parameters to functions needn't specify a size, in which case an array of any size may be passed. Otherwise, the array being passed must have a size equal to or greater than the parameter's size.
+Function parameters are *always* pass-by-reference, i.e. functions can mutate variables declared outside of the function through their mutable parameters. Arguments passed as inline declarations are assigned to a temporary variable to facilitate this (if the parameter is mutable, the function can freely modify this value, but it will disappear once the function returns).
 
 Functions do not return values; the sole output of functions is their mutable parameters (recall that mutable global variables don't exist).
-
-Functions can be overloaded.
 
 ```
 fn foo(mut int x, int y) {
@@ -71,6 +67,10 @@ fn main() {
   CLI:print(my_num); // "20"
 }
 ```
+
+Array parameters to functions needn't specify a size, in which case an array of any size may be passed. Otherwise, the array being passed must have a size equal to or greater than the parameter's size.
+
+Functions can be overloaded.
 
 ### Linkage
 
