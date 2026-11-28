@@ -2,12 +2,6 @@
 
 A simple spec for a simple programming language. Ideally the VM would be written in C but it's easier to do that in JS so I'll do that as a proof-of-concept.
 
-Planned features:
-- Interpreted
-- Strong typing
-- Functional (no hidden side effects)
-- Abstraction
-
 At some point it'd be nice for the lang to be used for making desktop apps with minimal boilerplate but we'll cross that bridge
 
 # Ideas idk
@@ -17,6 +11,12 @@ The virtual machine will come with built-in libraries. Some ideas:
 - `Math` (standard math functions, e.g. `:sin(float rad, mut float out)`)
 - `CLI` (`:print(char[] string)`, `:readline(mut char[] string)`, etc)
 - `Client` and `Server` (for netcode! can open TCP, UDP, HTTP connections, whatever!)
+
+Features
+- Interpreted
+- Strong typing
+- Functional (no hidden side effects)
+- Abstraction
 
 ### Types
 
@@ -35,9 +35,9 @@ I have nooo idea how I'm gonna implement abstract data types.
 
 ### Variables
 
-Variables are constant (immutable) unless declared with the `mut` keyword, in which case they are mutable. Variables in the global scope cannot be flagged with the `mut` keyword and so are always constant.
+Variables are constant (immutable) unless declared with the `mut` keyword, in which case they are mutable. Variables in the global scope cannot be flagged with the `mut` keyword and so are always constant (otherwise, a function would be able to change this variable, violating 'no hidden side effects').
 
-Variables cannot store a reference to another variable (which would allow a function to change a variable locally that affects another variable non-locally, violating 'no hidden side effects').
+There is no means for a variable to store a reference to another variable (which would allow a function to change a variable locally that affects another variable non-locally, violating 'no hidden side effects').
 
 ### Functions
 
