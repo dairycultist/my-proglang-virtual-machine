@@ -41,7 +41,13 @@ The virtual machine will come with built-in libraries. Some ideas:
 - `CLI` (`:print(idkhowtorepresentstrings)`, `:readline(mut idkhowtorepresentstrings)`, etc)
 - `Client` and `Server` (for netcode! can open TCP, UDP, HTTP connections, whatever!)
 
-*All* variables/function parameters are constant (immutable) unless declared with the `mut` keyword, in which case they are mutable. When passing a variable as a mutable argument to a function, you must explicitly label it with the `mut` keyword (*even though* the function's prototype already labels it as mutable; see above `MyPkg:foo(mut my_num);`). Variables in the global scope cannot be flagged with the `mut` keyword and so are always constant.
+### Variables
+
+Variables are constant (immutable) unless declared with the `mut` keyword, in which case they are mutable. Variables in the global scope cannot be flagged with the `mut` keyword and so are always constant.
+
+### Functions
+
+Function parameters are constant (immutable) unless declared with the `mut` keyword, in which case they are mutable. When passing a variable as a mutable argument to a function, you must explicitly label it with the `mut` keyword (*even though* the function's prototype already labels it as mutable; see above `MyPkg:foo(mut my_num);`).
 
 Function parameters are *always* pass-by-reference. This includes arguments passed as inline declarations, in which case a temporary variable is created to reference (if the parameter is mutable, the function can freely modify this value, but it will disappear once the function returns).
 
@@ -51,6 +57,6 @@ Functions do not return values; the sole output of functions is their mutable pa
 
 By default, everything has internal linkage.
 
-You can specify something have external linkage with a `:` preceding their keyword (see above `:PI` and `:foo(...)`). Only things in the global scope can have external linkage.
+You can specify a symbol have external linkage with `:` (see above `:PI` and `:foo(...)`). Only symbols in the global scope can have external linkage.
 
-You access things with external linkage through their package (see above `MyPkg:foo(...);`). There is no explicit importing of packages (all are linked automatically).
+Symbols with external linkage are accessed through their package (see above `MyPkg:foo(...);`). There is no explicit importing of packages (all are linked automatically).
