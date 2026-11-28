@@ -36,11 +36,11 @@ fn main() {
 }
 ```
 
-**All variables/function parameters** are constant (immutable) unless flagged with the `mut` keyword, in which case they are mutable. When passing a variable as a mutable argument to a function, you must explicitly label it with the `mut` keyword (*even though* the function's prototype already labels it as mutable; see above `Math:abs(mut my_num);`).
+*All* variables/function parameters are constant (immutable) unless flagged with the `mut` keyword, in which case they are mutable. When passing a variable as a mutable argument to a function, you must explicitly label it with the `mut` keyword (*even though* the function's prototype already labels it as mutable; see above `Math:abs(mut my_num);`). Variables in the global scope cannot be flagged with the `mut` keyword and so are always constant.
 
-Function parameters are always pass-by-reference. This includes arguments passed as inline declarations, in which case a temporary variable is created to reference (if the parameter is mutable, the function can modify this value, but it will disappear once the function returns).
+Function parameters are *always* pass-by-reference. This includes arguments passed as inline declarations, in which case a temporary variable is created to reference (if the parameter is mutable, the function can freely modify this value, but it will disappear once the function returns).
 
-The sole output of functions is their mutable parameters (functions don't return values, and variables in the global scope must be constant).
+Functions do not return values; the sole output of functions is their mutable parameters (recall that mutable global variables don't exist).
 
 By default, everything has internal linkage; only things in the global scope can have external linkage (i.e. functions and global-scope constants). This is indicated by `:` preceding their keyword (see above `:PI` and `:abs(...)`). You access these through their package (see above `Math:abs(...);`).
 
