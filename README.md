@@ -16,9 +16,13 @@ At some point it'd be nice for the lang to be used for making desktop apps with 
 ```
 package Math
 
-pkg real PI = 3.141592;
+// "real" is the implementation-agnostic equivalent of float/double.
+// Because this is preceded by ":", it has external linkage (accessed from other
+// files with Math:PI). By default, everything has internal linkage; only functions
+// and global-scope constants (aka not mutable) can have external linkage.
+real :PI = 3.141592;
 
-pkg fn abs(mut int x) {
+fn :abs(mut int x) {
   if (x < 0) {
     x = -x;
   }
@@ -26,6 +30,8 @@ pkg fn abs(mut int x) {
 ```
 
 ```
+// The main function is your program's entrypoint. because it isn't preceded by ":",
+// it has internal linkage.
 fn main() {
   mut int my_num = -10;
   Math:abs(mut my_num);
@@ -56,8 +62,6 @@ print(my_var); // "20"
 
 ## Libraries
 
-Libraries are how you share functions and global-scope constants between files. By default, functions and global-scope constants have internal linkage. Declaring them as part of a library switches them to external linkage.
-
 There is no explicit importing of libraries; all libraries that can be available to your program, are (built-in libraries aren't bundled with your program so there's no bloat, and libraries you define as part of your program are, well, part of your program).
 
 The virtual machine comes with built-in libraries. These include:
@@ -72,11 +76,3 @@ The virtual machine comes with built-in libraries. These include:
   - etc
 - `CLI` stuff like reading and writing to the command line
 - `Client` and `Server` are for netcode
-
-```
-fn LibraryName:function_in_library() {
-  ...
-}
-
-LibraryName:function_in_library();
-```
